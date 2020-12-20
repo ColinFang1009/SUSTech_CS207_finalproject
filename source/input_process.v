@@ -1,11 +1,18 @@
 module input_process(
     input clk, rst,
     input[3:0] row,
+    input[4:0] bt,
     output[3:0] col,
+    output[4:0] bt_press,
+    output[4:0] bt_edge,
     output[15:0] key_press,
     output[15:0] key_edge
 );
-
+button_edge bt_0(clk, bt[0], bt_press[0], bt_edge[0]);
+button_edge bt_1(clk, bt[1], bt_press[1], bt_edge[1]);
+button_edge bt_2(clk, bt[2], bt_press[2], bt_edge[2]);
+button_edge bt_3(clk, bt[3], bt_press[3], bt_edge[3]);
+button_edge bt_4(clk, bt[4], bt_press[4], bt_edge[4]);
 wire[15:0] key;
 key_scanner key_scanner_0(clk, rst, row, col, key);
 

@@ -47,7 +47,13 @@ sw1,sw2,sw3,sw4,clk,rst_n,key_press,key_edge,max_spp1,max_spp2,max_spp3,max_spp4
     if(!rst_n)
         begin
         rest1<=0;
+        rest2<=0;
+        rest3<=0;
+        rest4<=0;
         max_spp1<=4'b1111;
+        max_spp2<=4'b1111;
+        max_spp3<=4'b1111;
+        max_spp4<=4'b1111;
         end
         else begin
     casex({sw1,sw2,sw3,sw4})

@@ -30,7 +30,6 @@ module button_jitter(
     output but_out
 );
 
-
 reg [1:0] record = 2'b00;
 wire change_detect;
 reg [16:0] cnt;
