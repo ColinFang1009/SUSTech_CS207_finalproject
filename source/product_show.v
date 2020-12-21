@@ -26,10 +26,12 @@ module product_show(
     input [3:0] pay_remain,
     input [3:0] back,
     input seg_en,
+    input cd_en,//new, countdown active when cd_en = 1
     input clk, clk2,
     input rst,
     input sw1,sw2,sw3,
     output [3:0] scan_cnt_show,
+    output [1:0] scan_cd_show,//new
     output reg [7:0] DIG_r,
     output [7:0] quant_show_out1,
     output [7:0] quant_show_out2,
@@ -41,6 +43,7 @@ module product_show(
     output [7:0] back_out2
     );
     reg [3:0] scan_cnt;
+    reg [1:0] scan_cd;//countdown.
     reg [7:0] quant_show1;
     reg [7:0] quant_show2;
     reg [7:0] max_add_show1;
@@ -52,6 +55,7 @@ module product_show(
     reg en1,en2,en3,en4;
     reg [1:0] select;
     
+    assign scan_cd_show = scan_cd;
     assign scan_cnt_show = scan_cnt;
     assign quant_show_out1 = quant_show1;
     assign quant_show_out2 = quant_show2;
@@ -151,10 +155,18 @@ module product_show(
             default:begin quant_show1 = 8'b00111111; quant_show2 = 8'b00111111; end //00
             endcase
             end
-    always @(scan_cnt,seg_en)
+    always @(scan_cnt,seg_en, scan_cd,cd_en)
            begin
            if(~seg_en)
                 DIG_r = 8'b0000_0000;
+           //new
+           else if(cd_en)
+                case(scan_cd)
+                2'b00:DIG_r = 8'b00000001;
+                2'b01:DIG_r = 8'b00000010;
+                2'b10:DIG_r = 8'b01000000;
+                2'b11:DIG_r = 8'b10000000;
+                endcase
            else
             case ( scan_cnt)
                         4'b0000: DIG_r = 8'b0000_0000;//0
@@ -176,10 +188,16 @@ module product_show(
                         default:DIG_r = 8'b0000_0000;
                     endcase
                 end
+
     always @(posedge clk or negedge rst) //clkout or negedge rst
               if(!rst)begin
                         scan_cnt <=0;
                         end
+              else if(cd_en) // countdown mode
+                    begin
+                       scan_cd <= scan_cd + 1;
+                       if(scan_cd == 2'b11) scan_cd <=0;
+                    end
               else begin
                   case({sw1,sw2,sw3})
                   3'b100:begin

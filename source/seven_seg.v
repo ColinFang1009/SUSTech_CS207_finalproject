@@ -97,26 +97,39 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
     wire [7:0] back_show1;
     wire [7:0] back_show2;    
     
+    wire[4:0] countdown;
+    wire[7:0] cd_show1;
+    wire[7:0] cd_show2;
+    wire cd_en_temp;
+    reg cd_en = 0;
+    wire [1:0] scan_cd;
     assign Y = (~Y_r[7:0]);//{1'b1,(~Y_r[6:0])}
     assign DIG = ~DIG_r;
+    
+    countdown cd(clk2, rst, countdown,cd_en_temp);
+    translate_cd cd_translate(countdown, cd_show1, cd_show2);
    // module product_show(quant,max_add,seg_en, clk, clk2, rst, scan_cnt_show,DIG_r, quant_show_out1,quant_show_out2, max_add_out1,max_add_out2);
-    product_show product1(quant, max_add,pay_remain,back,seg_en, clk, clk2, rst,sw1,sw2,sw3,
-    scan_cnt, DIG_r1, 
+    product_show product1(quant, max_add,pay_remain,back,seg_en, cd_en,
+    clk, clk2, rst,sw1,sw2,sw3,
+    scan_cnt, scan_cd,DIG_r1, 
     quant_show1, quant_show2,max_add_show1, max_add_show2,pay_remain_show1,pay_remain_show2,
     back_show1, back_show2);
     
-    product_show product2(quant2,max_add2,pay_remain2,back2,seg_en2, clk, clk2, rst,sw1,sw2,sw3,
-    scan_cnt2, DIG_r2, 
+    product_show product2(quant2,max_add2,pay_remain2,back2,seg_en2, cd_en,
+    clk, clk2, rst,sw1,sw2,sw3,
+    scan_cnt2, scan_cd,DIG_r2, 
     quant_show_two1, quant_show_two2,max_add_show_two1, max_add_show_two2,pay_remain_show_two1,pay_remain_show_two2,
     back_show_two1, back_show_two2);
     
-    product_show product3(quant3,max_add3, pay_remain3,back3,seg_en3, clk, clk2, rst,sw1,sw2,sw3,
-    scan_cnt3, DIG_r3, 
+    product_show product3(quant3,max_add3, pay_remain3,back3,seg_en3, cd_en,
+    clk, clk2, rst,sw1,sw2,sw3,
+    scan_cnt3, scan_cd,DIG_r3, 
     quant_show_three1, quant_show_three2, max_add_show_three1, max_add_show_three2,pay_remain_show_three1,pay_remain_show_three2,
     back_show_three1, back_show_three2);
     
-    product_show product4(quant4,max_add4, pay_remain4,back4,seg_en4, clk, clk2, rst,sw1,sw2,sw3,
-    scan_cnt4, DIG_r4, 
+    product_show product4(quant4,max_add4, pay_remain4,back4,seg_en4, cd_en,
+    clk, clk2, rst,sw1,sw2,sw3,
+    scan_cnt4, scan_cd,DIG_r4, 
     quant_show_four1, quant_show_four2, max_add_show_four1, max_add_show_four2,pay_remain_show_four1,pay_remain_show_four2,
     back_show_four1, back_show_four2);
     
@@ -128,12 +141,6 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
             4'b0001:begin DIG_r = DIG_r4;Y_r = Y_r4;end
             default:begin DIG_r = 8'b1111_1111; Y_r = 8'b1111_1111; end
         endcase
- 
-//    always @ (posedge clk2)
-//        if(select == 2'b11)
-//            select <= 2'b00;0000000
-//        else
-//            select <= select + 1;
 
    //3,6,9: name  5,10,15:price p xx 7,14:storage
    always @ *//(scan_cnt,max_add_show2,quant_show2,max_add_show1,quant_show1,sw1,sw2,sw3)
@@ -161,6 +168,17 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
             endcase
         end
         3'b100: begin
+            if(cd_en_temp==1) begin
+                cd_en = 1;
+                case(scan_cd)
+                    2'b00:Y_r1 = cd_show2;
+                    2'b01:Y_r1 = cd_show1;
+                    2'b10:Y_r1 = pay_remain_show2;
+                    2'b11:Y_r1 = pay_remain_show1;
+                endcase
+            end
+            else begin
+                cd_en = 0;
                 case (scan_cnt)
                     0: Y_r1 = 8'b00000000; //0:0111111
                     1: Y_r1 = 8'b01101101; //1:0000110
@@ -180,6 +198,7 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
                     15: Y_r1 = 8'b01111100; //F:1110001 P1110011
                     default: Y_r1 = 8'b00000000; 
                     endcase
+                end
                 end
         default: begin
         case (scan_cnt)
@@ -206,7 +225,7 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
       end 
       
       
-   always @ (scan_cnt2,max_add_show_two2,max_add_show_two1,quant_show_two2,quant_show_two1,sw1,sw2,sw3)
+   always @ *//(scan_cnt2,max_add_show_two2,max_add_show_two1,quant_show_two2,quant_show_two1,sw1,sw2,sw3)
             begin
             case({sw1,sw2,sw3})
                 3'b010: begin
@@ -230,7 +249,18 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
                  default: Y_r2 = 8'b00000000; 
                         endcase
                 end
-              3'b100: begin            
+              3'b100: begin 
+                    if(cd_en_temp == 1) begin
+                            cd_en = 1;
+                            case(scan_cd)
+                                2'b00:Y_r2 = cd_show2;
+                                2'b01:Y_r2 = cd_show1;
+                                2'b10:Y_r2 = pay_remain_show_two2;
+                                2'b11:Y_r2 = pay_remain_show_two1;
+                            endcase
+                        end
+                        else begin
+                            cd_en = 0;           
                             case (scan_cnt2)
                                0: Y_r2 = 8'b00000000; //0:0111111
                                1: Y_r2 = 8'b01101101; //1:0000110
@@ -250,6 +280,7 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
                                15: Y_r2 = 8'b01111100; //F:1110001 P1110011
                                default: Y_r2 = 8'b00000000; 
                           endcase
+                          end
                           end              
              default: begin            
               case (scan_cnt2)
@@ -275,7 +306,7 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
             endcase
             end
 
-   always @ (scan_cnt3,max_add_show_three2,max_add_show_three1,quant_show_three2,quant_show_three1,sw1,sw2,sw3)
+   always @ *// (scan_cnt3,max_add_show_three2,max_add_show_three1,quant_show_three2,quant_show_three1,sw1,sw2,sw3)
       begin
         case({sw1,sw2,sw3})
         3'b010: begin
@@ -300,7 +331,18 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
             endcase
         end
         3'b100:begin
-        case (scan_cnt3)
+            if(cd_en_temp ==1) begin
+                cd_en = 1;
+                case(scan_cd)
+                    2'b00:Y_r3 = cd_show2;
+                    2'b01:Y_r3 = cd_show1;
+                    2'b10:Y_r3 = pay_remain_show_three2;
+                    2'b11:Y_r3 = pay_remain_show_three1;
+                endcase
+             end
+             else begin
+             cd_en = 0;
+            case (scan_cnt3)
             0: Y_r3 = 8'b00000000; //0:0111111
             1: Y_r3 = 8'b01101101; //1:0000110
             2: Y_r3 = 8'b00111001; //2:1011011
@@ -319,6 +361,7 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
             15: Y_r3 = 8'b01111100; //F:1110001 P1110011
             default: Y_r3 = 8'b00000000; 
             endcase
+       end
        end
         default: begin
         case (scan_cnt3)
@@ -344,7 +387,7 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
       endcase
       end 
       
-   always @ (scan_cnt4,sw1,sw2,sw3,max_add_show_four2,max_add_show_four1,quant_show_four2,quant_show_four1)
+   always @ * //(scan_cnt4,sw1,sw2,sw3,max_add_show_four2,max_add_show_four1,quant_show_four2,quant_show_four1)
             begin
             case({sw1,sw2,sw3})
                     3'b010: begin
@@ -369,6 +412,17 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
                         endcase
                     end
             3'b100: begin
+            if(cd_en_temp == 1) begin
+                cd_en = 1;
+                case(scan_cd)
+                    2'b00:Y_r4 = cd_show2;
+                    2'b01:Y_r4 = cd_show1;
+                    2'b10:Y_r4 = pay_remain_show_four2;
+                    2'b11:Y_r4 = pay_remain_show_four1;
+                endcase
+              end
+           else begin
+            cd_en = 0;
         case (scan_cnt4)
                 0: Y_r4 = 8'b00000000; //0:0111111
                 1: Y_r4 = 8'b01101101; //1:0000110
@@ -388,8 +442,9 @@ seg_en,seg_en2,seg_en3, seg_en4, DIG,Y);
                 15: Y_r4 = 8'b01111100; //F:1110001 P1110011
                 default: Y_r4 = 8'b00000000; 
                 endcase
+           end
            end            
-                    default: begin
+              default: begin
               case (scan_cnt4)
                   0: Y_r4 = 8'b00000000; //0:0111111
                   1: Y_r4 = 8'b01101101; //1:0000110

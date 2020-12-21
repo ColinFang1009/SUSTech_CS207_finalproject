@@ -59,22 +59,9 @@ module top(rst,rst2,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y,test);
     wire [3:0] back3;
     wire [3:0] back4;
     reg en1,en2,en3,en4;
+    
     parameter capacity = 15;
-//    always @(quant, max_add,bt_edge,bt_press)begin
-//        if(bt_edge == 5'b00001 | 
-//        bt_edge == 5'b00010 |
-//        bt_edge == 5'b10000 |
-//        bt_edge == 5'b01000 | 
-//        bt_press == 5'b00001 | 
-//        bt_press == 5'b00100 |
-//        bt_press == 5'b10000 |
-//        bt_press == 5'b01000 |
-//        bt_edge == 5'b1111)begin
-//            test = 1;
-//            end
-//        else
-//            test <= 0;
-//    end
+
     always@ (S1,S2,S3,S4)
         case({S1, S2, S3, S4})
             4'b0001:{en1,en2,en3,en4} = 4'b0001;
@@ -85,10 +72,9 @@ module top(rst,rst2,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y,test);
         endcase
     clock ut1(rst,clk,clkout);
     clock_two ut2(rst,clk,clkout2);
-//module seven_seg(rst,clk,clk2,sw1,sw2,sw3,quant,quant2,quant3, quant4, max_add, max_add2, max_add3, max_add4,
-    //pay_remain,pay_remain2,pay_remain3, pay_remain4,back, back2,back3,back4,
-    //seg_en,seg_en2,seg_en3, seg_en4, DIG,Y););
-    seven_seg show1(rst,clkout,clkout2,sw1,sw2,sw3,quant,quant2,quant3, quant4, max_add, max_add2, max_add3, max_add4,
+
+    //used to be: rst
+    seven_seg show1(rst_n,clkout,clkout2,sw1,sw2,sw3,quant,quant2,quant3, quant4, max_add, max_add2, max_add3, max_add4,
     pay_remain,pay_remain2,pay_remain3, pay_remain4,back1,back2,back3,back4,
     en1,en2,en3,en4,DIG,Y);
     
@@ -96,8 +82,7 @@ module top(rst,rst2,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y,test);
     pay(.sw1(S1),.sw2(S2),.sw3(S3),.sw4(S4),.clk(clk),.rst_n(rst_n),.bt_press(bt_press),.bt_edge(bt_edge),
     .remain1(pay_remain),.remain2(pay_remain2),.remain3(pay_remain3),.remain4(pay_remain4),
     .back1(back1),.back2(back2),.back3(back3),.back4(back4));
-    //seven_seg_two show2(rst,clkout,clkout2,quant2,en2,DIG,Y);
-    //module manage(sw1,sw2,sw3,sw4,clk,rst_n,key_press,key_edge,max_spp1,max_spp2,max_spp3,max_spp4,rest1,rest2,rest3,rest4);
+   
     manage add(.sw1(S1),.sw2(S2),.sw3(S3),.sw4(S4),.clk(clk),.rst_n(rst_n),.key_press(key_press),.key_edge(key_edge),
     .max_spp1(max_add),.max_spp2(max_add2),.max_spp3(max_add3),.max_spp4(max_add4),
     .rest1(quant),.rest2(quant2),.rest3(quant3),.rest4(quant4));
@@ -127,5 +112,22 @@ module top(rst,rst2,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y,test);
 //        max_add2 <= capacity - quant2;
 //        max_add3 <= capacity - quant3;
 //        max_add4 <= capacity - quant4;
+
+
         end
+//    always @(quant, max_add,bt_edge,bt_press)begin
+        //        if(bt_edge == 5'b00001 | 
+        //        bt_edge == 5'b00010 |
+        //        bt_edge == 5'b10000 |
+        //        bt_edge == 5'b01000 | 
+        //        bt_press == 5'b00001 | 
+        //        bt_press == 5'b00100 |
+        //        bt_press == 5'b10000 |
+        //        bt_press == 5'b01000 |
+        //        bt_edge == 5'b1111)begin
+        //            test = 1;
+        //            end
+        //        else
+        //            test <= 0;
+        //    end
 endmodule

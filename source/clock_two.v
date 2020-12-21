@@ -27,7 +27,7 @@ reg [31:0] cnt;
 parameter period = 100000000;//200000
 always @(posedge clk or negedge rst)
     begin
-        if(!rst) begin
+        if(~rst) begin
             cnt <= 0;
             clkout <= 0;
         end
