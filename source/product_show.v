@@ -77,7 +77,7 @@ module product_show(
      4'b0110:begin back_show1 = 8'b00111111; back_show2 = 8'b01111101; end//06
      4'b0111:begin back_show1 = 8'b00111111; back_show2 = 8'b00100111; end//07
      4'b1000:begin back_show1 = 8'b00111111; back_show2 = 8'b01111111; end//08
-     4'b1001:begin back_show1 = 8'b00000110; back_show2 = 8'b01100111; end//09
+     4'b1001:begin back_show1 = 8'b00111111; back_show2 = 8'b01100111; end//09
      4'b1010:begin back_show1 = 8'b00000110; back_show2 = 8'b00111111; end//10
      4'b1011:begin back_show1 = 8'b00000110; back_show2 = 8'b00000110; end//11
      4'b1100:begin back_show1 = 8'b00000110; back_show2 = 8'b01011011; end//12
@@ -99,7 +99,7 @@ module product_show(
      4'b0110:begin pay_remain_show1 = 8'b00111111; pay_remain_show2 = 8'b01111101; end//06
      4'b0111:begin pay_remain_show1 = 8'b00111111; pay_remain_show2 = 8'b00100111; end//07
      4'b1000:begin pay_remain_show1 = 8'b00111111; pay_remain_show2 = 8'b01111111; end//08
-     4'b1001:begin pay_remain_show1 = 8'b00000110; pay_remain_show2 = 8'b01100111; end//09
+     4'b1001:begin pay_remain_show1 = 8'b00111111; pay_remain_show2 = 8'b01100111; end//09
      4'b1010:begin pay_remain_show1 = 8'b00000110; pay_remain_show2 = 8'b00111111; end//10
      4'b1011:begin pay_remain_show1 = 8'b00000110; pay_remain_show2 = 8'b00000110; end//11
      4'b1100:begin pay_remain_show1 = 8'b00000110; pay_remain_show2 = 8'b01011011; end//12
@@ -121,7 +121,7 @@ module product_show(
      4'b0110:begin max_add_show1 = 8'b00111111; max_add_show2 = 8'b01111101; end//06
      4'b0111:begin max_add_show1 = 8'b00111111; max_add_show2 = 8'b00100111; end//07
      4'b1000:begin max_add_show1 = 8'b00111111; max_add_show2 = 8'b01111111; end//08
-     4'b1001:begin max_add_show1 = 8'b00000110; max_add_show2 = 8'b01100111; end//09
+     4'b1001:begin max_add_show1 = 8'b00111111; max_add_show2 = 8'b01100111; end//09
      4'b1010:begin max_add_show1 = 8'b00000110; max_add_show2 = 8'b00111111; end//10
      4'b1011:begin max_add_show1 = 8'b00000110; max_add_show2 = 8'b00000110; end//11
      4'b1100:begin max_add_show1 = 8'b00000110; max_add_show2 = 8'b01011011; end//12
@@ -145,7 +145,7 @@ module product_show(
             4'b0110:begin quant_show1 = 8'b00111111; quant_show2 = 8'b01111101; end//06
             4'b0111:begin quant_show1 = 8'b00111111; quant_show2 = 8'b00100111; end//07
             4'b1000:begin quant_show1 = 8'b00111111; quant_show2 = 8'b01111111; end//08
-            4'b1001:begin quant_show1 = 8'b00000110; quant_show2 = 8'b01100111; end//09
+            4'b1001:begin quant_show1 = 8'b00111111; quant_show2 = 8'b01100111; end//09
             4'b1010:begin quant_show1 = 8'b00000110; quant_show2 = 8'b00111111; end//10
             4'b1011:begin quant_show1 = 8'b00000110; quant_show2 = 8'b00000110; end//11
             4'b1100:begin quant_show1 = 8'b00000110; quant_show2 = 8'b01011011; end//12
