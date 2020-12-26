@@ -89,3 +89,12 @@ set_property IOSTANDARD LVCMOS15 [get_ports {bt[3]}]
 set_property IOSTANDARD LVCMOS15 [get_ports {bt[2]}]
 set_property IOSTANDARD LVCMOS15 [get_ports {bt[1]}]
 set_property IOSTANDARD LVCMOS15 [get_ports {bt[0]}]
+
+set_property PACKAGE_PIN AA6 [get_ports {rst_pay}]
+set_property IOSTANDARD LVCMOS33 [get_ports {rst_pay}]
+
+set_property PACKAGE_PIN A19 [get_ports {buzzer}]
+set_property IOSTANDARD LVCMOS33 [get_ports {buzzer}]
+
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets rst_pay_IBUF]
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets rst_pay_IBUF]

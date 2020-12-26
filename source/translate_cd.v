@@ -21,9 +21,9 @@
 
 
 module translate_cd(
-    input [4:0] CD,
-    output reg [7:0] CD_show1,
-    output reg [7:0] CD_show2
+    input [4:0] CD, //countdown
+    output reg [7:0] CD_show1, //seg1 for first digit
+    output reg [7:0] CD_show2 //seg2 for second digit
     );
  always @ (CD) begin
        case(CD)

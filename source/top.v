@@ -20,10 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module top(rst,rst2,rst_test,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y,test);
-    input rst;//zero
+module top(rst,rst2,rst_pay,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y,test,buzzer);
+    input rst;//reset for clock
     input rst2;//reset2
-    input rst_test;//new
+    input rst_pay;//new
     input clk;
     input rst_n; //reset
     input sw1,sw2,sw3;
@@ -36,6 +36,7 @@ module top(rst,rst2,rst_test,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y
     output [7:0] DIG;
     output [7:0] Y;
     output test;
+    output buzzer;
     wire  [15:0] key_press;
     wire [15:0] key_edge;
     wire[4:0] bt_press;
@@ -59,11 +60,19 @@ module top(rst,rst2,rst_test,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y
     wire [3:0] back2;
     wire [3:0] back3;
     wire [3:0] back4;
-    wire signal;
+    wire [3:0] count1;
+    wire [3:0] count2;
+    wire [3:0] count3;
+    wire [3:0] count4;
+    wire [3:0] sale1;
+    wire [3:0] sale2;
+    wire [3:0] sale3;
+    wire [3:0] sale4;
+
     reg en1,en2,en3,en4;
     
     parameter capacity = 15;
-
+    sales_data_processing sales(count1,count2,count3,count4,sale1,sale2,sale3,sale4);
     always@ (S1,S2,S3,S4)
         case({S1, S2, S3, S4})
             4'b0001:{en1,en2,en3,en4} = 4'b0001;
@@ -75,23 +84,22 @@ module top(rst,rst2,rst_test,clk,rst_n,sw1,sw2,sw3,S1,S2,S3,S4,row,col,bt,DIG, Y
     clock ut1(rst,clk,clkout);
     clock_two ut2(rst,clk,clkout2);
 
-    //used to be: rst
-    seven_seg show1(rst_n,clkout,clkout2,sw1,sw2,sw3,quant,quant2,quant3, quant4, max_add, max_add2, max_add3, max_add4,
-    pay_remain,pay_remain2,pay_remain3, pay_remain4,back1,back2,back3,back4,
-    en1,en2,en3,en4,DIG,Y);
+    //used to be: rst,rst_n
+    seven_seg show1(rst_pay,clk,clkout,clkout2,sw1,sw2,sw3,quant,quant2,quant3, quant4, max_add, max_add2, max_add3, max_add4,
+    pay_remain,pay_remain2,pay_remain3, pay_remain4,back1,back2,back3,back4,sale1,sale2,sale3,sale4,count1,count2,count3,count4,
+    en1,en2,en3,en4,DIG,Y,buzzer);
     
 //    quant_control qt_ctl(.clk(clkout),.sw1(S1),.sw2(S2),.sw3(S3),.sw4(S4),.signal(signal),
 //    .quant1(quant),.quant2(quant2),.quant3(quant3),.quant4(quant4));
     
-    pay(.sw1(S1),.sw2(S2),.sw3(S3),.sw4(S4),.clk(clk),.rst_n(rst_n),.bt_press(bt_press),.bt_edge(bt_edge),
+    pay(.sw1(S1),.sw2(S2),.sw3(S3),.sw4(S4),.clk(clk),.rst_n(rst_pay),.bt_press(bt_press),.bt_edge(bt_edge),
     .remain1(pay_remain),.remain2(pay_remain2),.remain3(pay_remain3),.remain4(pay_remain4),
-    .back1(back1),.back2(back2),.back3(back3),.back4(back4),
-    .signal(signal));
+    .back1(back1),.back2(back2),.back3(back3),.back4(back4),.count1(count1),.count2(count2),.count3(count3),.count4(count4));
     
     //manage_test t(S1,S2,S3,S4,clk,rst_n,rst_test,row,col,max_add,quant,test);
     manage add(.sw1(S1),.sw2(S2),.sw3(S3),.sw4(S4),.clk(clk),.rst_n(rst_n),.key_press(key_press),.key_edge(key_edge),
-    .max_spp1(max_add),.max_spp2(max_add2),.max_spp3(max_add3),.max_spp4(max_add4),
-    .rest1(quant),.rest2(quant2),.rest3(quant3),.rest4(quant4));
+    .max1(max_add),.max2(max_add2),.max3(max_add3),.max4(max_add4),
+    .quant1(quant),.quant2(quant2),.quant3(quant3),.quant4(quant4),.count1(count1),.count2(count2),.count3(count3),.count4(count4));
     
     input_process input_process_inst(
        clk, rst2,

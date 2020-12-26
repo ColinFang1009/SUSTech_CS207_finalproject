@@ -21,35 +21,51 @@
 
 
 module manage(
-sw1,sw2,sw3,sw4,clk,rst_n,key_press,key_edge,max_spp1,max_spp2,max_spp3,max_spp4,rest1,rest2,rest3,rest4
-    );
-    input sw1;
-    input sw2;
-    input sw3;
-    input sw4;
-    input clk;
-    input rst_n;
-    input[15:0] key_press;
-    input[15:0] key_edge;
-    output  reg[3:0]max_spp1;
-    output  reg[3:0]max_spp2;
-    output  reg[3:0]max_spp3;
-    output  reg[3:0]max_spp4;
-    output reg[3:0]rest1;
-    output reg[3:0]rest2;
-    output reg[3:0]rest3;
-    output reg[3:0]rest4;
+    input sw1,sw2,sw3,sw4, //4 products
+    input clk,
+    input rst_n,
+    input[15:0] key_press, //key pressing out
+    input[15:0] key_edge, //key pressing edge
+    input [3:0]count1, //quantity sold for product1
+    input [3:0]count2,
+    input [3:0]count3,
+    input [3:0]count4,
+    output  [3:0]max1,//maximal # of replenishment for product1
+    output  [3:0]max2,
+    output  [3:0]max3,
+    output  [3:0]max4,
+    output [3:0] quant1,//current quantity of product1
+    output [3:0] quant2,
+    output [3:0] quant3,
+    output [3:0] quant4);
+    reg [3:0]max_spp1;
+    reg [3:0]max_spp2;
+    reg [3:0]max_spp3;
+    reg [3:0]max_spp4;
+    reg [3:0] rest1;
+    reg [3:0] rest2;
+    reg [3:0] rest3;
+    reg [3:0] rest4;
     parameter capacity=15;
     
+    assign max1 = capacity - rest1 + count1;
+    assign quant1 = rest1 - count1;
+    assign max2 = capacity - rest2 + count2;
+    assign quant2 = rest2 - count2;
+    assign max3 = capacity - rest3 + count3;
+    assign quant3 = rest3 - count3;
+    assign max4 = capacity - rest4 + count4;
+    assign quant4 = rest4 - count4;
+
     
   always @(posedge clk or negedge rst_n)
     begin
     if(!rst_n)
         begin
-        rest1<=0;
-        rest2<=0;
-        rest3<=0;
-        rest4<=0;
+        rest1<=count1;
+        rest2<=count2;
+        rest3<=count3;
+        rest4<=count4;
         max_spp1<=4'b1111;
         max_spp2<=4'b1111;
         max_spp3<=4'b1111;

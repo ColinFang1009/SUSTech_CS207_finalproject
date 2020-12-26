@@ -25,9 +25,9 @@
 // use 20ms as a counter
 
 module button_jitter(
-    input clk,
-    input but_in,
-    output but_out
+    input clk,//clock
+    input but_in,//button input
+    output but_out //button output after de-bouncing
 );
 
 reg [1:0] record = 2'b00;

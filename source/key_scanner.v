@@ -32,10 +32,8 @@ parameter SCANING = 4'd1;
 parameter UPDATE_DATA = 4'd2;
 
 reg [3:0] state;
-
 reg[15:0] data;
 reg[15:0] data_out;
-
 reg[2:0] waitbit; // make butten wait some clock to read data
 
 key_mapping key_mapping_inst(data_out, keys);

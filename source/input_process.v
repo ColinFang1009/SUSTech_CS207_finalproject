@@ -1,12 +1,12 @@
 module input_process(
-    input clk, rst,
-    input[3:0] row,
-    input[4:0] bt,
-    output[3:0] col,
-    output[4:0] bt_press,
-    output[4:0] bt_edge,
-    output[15:0] key_press,
-    output[15:0] key_edge
+    input clk, rst, //clock, reset
+    input[3:0] row, //row input for keyboard
+    input[4:0] bt,//five buttons
+    output[3:0] col, //column output for keyboard
+    output[4:0] bt_press,//button pressing after debouncing
+    output[4:0] bt_edge,//edge for button pressing
+    output[15:0] key_press, //key pressing after debouncing
+    output[15:0] key_edge //edge for key pressing
 );
 button_edge bt_0(clk, bt[0], bt_press[0], bt_edge[0]);
 button_edge bt_1(clk, bt[1], bt_press[1], bt_edge[1]);

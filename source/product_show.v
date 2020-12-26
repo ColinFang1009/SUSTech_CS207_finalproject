@@ -21,26 +21,32 @@
 
 
 module product_show(
-    input [3:0] quant,
-    input [3:0] max_add,
-    input [3:0] pay_remain,
-    input [3:0] back,
-    input seg_en,
-    input cd_en,//new, countdown active when cd_en = 1
-    input clk, clk2,
-    input rst,
-    input sw1,sw2,sw3,
-    output [3:0] scan_cnt_show,
-    output [1:0] scan_cd_show,//new
-    output reg [7:0] DIG_r,
-    output [7:0] quant_show_out1,
-    output [7:0] quant_show_out2,
+    input [3:0] quant, //quantity 
+    input [3:0] max_add,//maximal # of replenishment 
+    input [3:0] pay_remain,// amount to be paid
+    input [3:0] back, //change back
+    input [3:0] sale, //sales revenue
+    input [3:0] count,//quantity sold
+    input seg_en,//enable
+    input cd_en,//countdown_status
+    input clk, clk2, //500Hz, 1Hz
+    input rst,//reset
+    input sw1,sw2,sw3,//mode
+    output [3:0] scan_cnt_show,//display index
+    output [1:0] scan_cd_show,//countdown index
+    output reg [7:0] DIG_r, //bit selection
+    output [7:0] quant_show_out1, //display digit1 for quantity
+    output [7:0] quant_show_out2, //display digit2 for quantity
     output [7:0] max_add_out1,
     output [7:0] max_add_out2,
     output [7:0] pay_remain_out1,
     output [7:0] pay_remain_out2,
     output [7:0] back_out1,
-    output [7:0] back_out2
+    output [7:0] back_out2,
+    output [7:0] sale_out1,
+    output [7:0] sale_out2,
+    output [7:0] count_out1,
+    output [7:0] count_out2
     );
     reg [3:0] scan_cnt;
     reg [1:0] scan_cd;//countdown.
@@ -52,6 +58,10 @@ module product_show(
     reg [7:0] pay_remain_show2;
     reg [7:0] back_show1;
     reg [7:0] back_show2;
+    reg [7:0] sale_show1;
+    reg [7:0] sale_show2;
+    reg [7:0] count_show1;
+    reg [7:0] count_show2;
     reg en1,en2,en3,en4;
     reg [1:0] select;
     
@@ -65,7 +75,53 @@ module product_show(
     assign pay_remain_out2 = pay_remain_show2;
     assign back_out1 = back_show1;
     assign back_out2 = back_show2;
-
+    assign sale_out1 = sale_show1;
+    assign sale_out2 = sale_show2;
+    assign count_out1 = count_show1;
+    assign count_out2 = count_show2;
+    
+    always @ (count) begin
+        case(count)
+         4'b0000:begin count_show1 = 8'b00111111; count_show2 = 8'b00111111; end //00
+         4'b0001:begin count_show1 = 8'b00111111; count_show2 = 8'b00000110; end//01
+         4'b0010:begin count_show1 = 8'b00111111; count_show2 = 8'b01011011; end//02
+         4'b0011:begin count_show1 = 8'b00111111; count_show2 = 8'b01001111; end//03
+         4'b0100:begin count_show1 = 8'b00111111; count_show2 = 8'b01100110; end//04
+         4'b0101:begin count_show1 = 8'b00111111; count_show2 = 8'b01101101; end//05
+         4'b0110:begin count_show1 = 8'b00111111; count_show2 = 8'b01111101; end//06
+         4'b0111:begin count_show1 = 8'b00111111; count_show2 = 8'b00100111; end//07
+         4'b1000:begin count_show1 = 8'b00111111; count_show2 = 8'b01111111; end//08
+         4'b1001:begin count_show1 = 8'b00111111; count_show2 = 8'b01100111; end//09
+         4'b1010:begin count_show1 = 8'b00000110; count_show2 = 8'b00111111; end//10
+         4'b1011:begin count_show1 = 8'b00000110; count_show2 = 8'b00000110; end//11
+         4'b1100:begin count_show1 = 8'b00000110; count_show2 = 8'b01011011; end//12
+         4'b1101:begin count_show1 = 8'b00000110; count_show2 = 8'b01001111; end//13
+         4'b1110:begin count_show1 = 8'b00000110; count_show2 = 8'b01100110; end//14
+         4'b1111:begin count_show1 = 8'b00000110; count_show2 = 8'b01101101; end//15
+         default:begin count_show1 = 8'b00111111; count_show2 = 8'b00111111; end //00
+         endcase
+         end    
+    always @ (sale) begin
+        case(sale)
+         4'b0000:begin sale_show1 = 8'b00111111; sale_show2 = 8'b00111111; end //00
+         4'b0001:begin sale_show1 = 8'b00111111; sale_show2 = 8'b00000110; end//01
+         4'b0010:begin sale_show1 = 8'b00111111; sale_show2 = 8'b01011011; end//02
+         4'b0011:begin sale_show1 = 8'b00111111; sale_show2 = 8'b01001111; end//03
+         4'b0100:begin sale_show1 = 8'b00111111; sale_show2 = 8'b01100110; end//04
+         4'b0101:begin sale_show1 = 8'b00111111; sale_show2 = 8'b01101101; end//05
+         4'b0110:begin sale_show1 = 8'b00111111; sale_show2 = 8'b01111101; end//06
+         4'b0111:begin sale_show1 = 8'b00111111; sale_show2 = 8'b00100111; end//07
+         4'b1000:begin sale_show1 = 8'b00111111; sale_show2 = 8'b01111111; end//08
+         4'b1001:begin sale_show1 = 8'b00111111; sale_show2 = 8'b01100111; end//09
+         4'b1010:begin sale_show1 = 8'b00000110; sale_show2 = 8'b00111111; end//10
+         4'b1011:begin sale_show1 = 8'b00000110; sale_show2 = 8'b00000110; end//11
+         4'b1100:begin sale_show1 = 8'b00000110; sale_show2 = 8'b01011011; end//12
+         4'b1101:begin sale_show1 = 8'b00000110; sale_show2 = 8'b01001111; end//13
+         4'b1110:begin sale_show1 = 8'b00000110; sale_show2 = 8'b01100110; end//14
+         4'b1111:begin sale_show1 = 8'b00000110; sale_show2 = 8'b01101101; end//15
+         default:begin sale_show1 = 8'b00111111; sale_show2 = 8'b00111111; end //00
+         endcase
+         end
     always @ (back) begin
     case(back)
      4'b0000:begin back_show1 = 8'b00111111; back_show2 = 8'b00111111; end //00

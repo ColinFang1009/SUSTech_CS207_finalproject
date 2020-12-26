@@ -21,28 +21,23 @@
 
 
 module pay(
-sw1,sw2,sw3,sw4,clk,rst_n,bt_press,bt_edge,remain1,remain2,remain3,remain4,back1,back2,back3,back4
-    );
-    input sw1;
-    input sw2;
-    input sw3;
-    input sw4;
-    input clk;
-    input rst_n;
-    input[4:0] bt_press;
-    input[4:0] bt_edge;
-    //output  reg[3:0] price1;
-    //output  reg[3:0] max_spp2;
-    //output  reg[3:0]max_spp3;
-    //output  reg[3:0]max_spp4;
-    output reg[3:0] remain1;
-    output reg[3:0] remain2;
-    output reg[3:0] remain3;
-    output reg[3:0] remain4;
-    output reg[3:0] back1;
-    output reg[3:0] back2;
-    output reg[3:0] back3;
-    output reg[3:0] back4;
+    input sw1, sw2, sw3, sw4,//product 1/2/3/4
+    input clk,//clock
+    input rst_n,//reset
+    input[4:0] bt_press, 
+    input[4:0] bt_edge,
+    output reg[3:0] remain1, //amount to be paid
+    output reg[3:0] remain2,
+    output reg[3:0] remain3,
+    output reg[3:0] remain4,
+    output reg[3:0] back1, //change back
+    output reg[3:0] back2,
+    output reg[3:0] back3,
+    output reg[3:0] back4,
+    output reg [3:0] count1,//quantity sold
+    output reg [3:0] count2,
+    output reg [3:0] count3,
+    output reg [3:0] count4);
     parameter p1 = 12;
     parameter p2 = 14;
     parameter p3 = 2;
@@ -54,6 +49,38 @@ sw1,sw2,sw3,sw4,clk,rst_n,bt_press,bt_edge,remain1,remain2,remain3,remain4,back1
     assign left_press = bt_edge[1];
     assign right_press = bt_edge[0];
     //{up_press,down_press, left_press, right_press} = 1/2/5/10
+    always@(remain1)
+    begin
+        if(remain1 == 0)
+            count1 = count1 + 1;
+        else
+            count1 = count1;
+    end
+    
+    always@(remain2)
+    begin
+        if(remain2 == 0)
+            count2 = count2 + 1;
+        else
+            count2 = count2;
+    end
+
+    always@(remain3)
+    begin
+        if(remain3 == 0)
+            count3 = count3 + 1;
+        else
+            count3 = count3;
+    end
+
+    always@(remain4)
+    begin
+        if(remain4 == 0)
+            count4 = count4 + 1;
+        else
+            count4 = count4;
+    end
+
   always @(posedge clk or negedge rst_n)
     begin
     if(!rst_n)
